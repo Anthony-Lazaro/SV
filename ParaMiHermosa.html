@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>San Valentín | Para Julia</title>
+    <style>
+        :root {
+            --valentine-red: #ff4d4d; 
+            --valentine-pink: #ff85a2;
+            --valentine-soft: #fff0f3;
+            --bg: #0a0a0a;
+            --text: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .aura {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 77, 77, 0.1) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .petal {
+            position: absolute;
+            background-color: var(--valentine-pink);
+            border-radius: 150% 0 150% 0;
+            opacity: 0.7;
+            z-index: 1;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 450px;
+            min-height: 450px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .heart {
+            color: var(--valentine-red);
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px var(--valentine-pink));
+            animation: pulse 1.5s infinite;
+        }
+
+        h1 {
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ffffff;
+            margin: 0 0 1.5rem 0;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+        }
+
+        .pregunta-inicial {
+            font-size: 1.4rem;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+            color: var(--valentine-soft);
+        }
+
+        .buttons-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            min-height: 50px;
+            position: relative;
+        }
+
+        .btn {
+            padding: 12px 0;
+            min-width: 110px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            white-space: nowrap;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-si {
+            background: var(--valentine-red);
+            color: white;
+            z-index: 20;
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+        }
+
+        #btn-no {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            z-index: 15;
+        }
+
+        #contenido-real {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .frase { font-style: italic; margin-bottom: 1.5rem; color: var(--valentine-soft); font-size: 1.1rem; }
+        .mensaje-personal { font-size: 1rem; color: #dddddd; line-height: 1.6; }
+        .extra-texto { margin-top: 1.5rem; color: var(--valentine-pink); font-weight: bold; font-size: 1.2rem; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(110vh) translateX(100px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="musica" src="TU_ENLACE_AQUI" preload="auto"></audio>
+
+    <div class="aura"></div>
+
+    <div class="container" id="main-card">
+        <div class="heart">❤️</div>
+        <h1>Mi Hermosa, Julia..</h1>
+        
+        <div id="fase-pregunta">
+            <div class="pregunta-inicial">¿Quieres ser mi San Valentín?</div>
+            <div class="buttons-wrapper">
+                <button class="btn btn-si" onclick="revelarMensaje()">Sí</button>
+                <button class="btn" id="id-btn-no">No</button>
+            </div>
+        </div>
+
+        <div id="contenido-real">
+            <div class="frase">"Si el mundo te hizo fría, yo aprendo a vivir en el hielo; no tengo prisa, solo quiero ser tu consuelo."</div>
+            <div class="mensaje-personal">Sabía que dirías que sí. No tienes que caminar sola, yo estoy acá con vos.</div>
+            <div class="extra-texto">¡Te quiero!</div>
+        </div>
+    </div>
+
+    <script>
+        const btnNo = document.getElementById('id-btn-no');
+        const container = document.getElementById('main-card');
+        const musica = document.getElementById('musica');
+
+        function escapar() {
+            btnNo.style.position = 'absolute';
+            const margin = 20;
+            const maxX = container.clientWidth - btnNo.offsetWidth - margin;
+            const maxY = container.clientHeight - btnNo.offsetHeight - margin;
+            const randomX = Math.max(margin, Math.random() * maxX);
+            const randomY = Math.max(margin, Math.random() * maxY);
+            btnNo.style.left = `${randomX}px`;
+            btnNo.style.top = `${randomY}px`;
+        }
+
+        btnNo.addEventListener('mouseover', escapar);
+        btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); escapar(); });
+        btnNo.addEventListener('click', (e) => { e.preventDefault(); escapar(); });
+
+        function revelarMensaje() {
+            // Reproducir música
+            musica.play().catch(error => console.log("El navegador bloqueó el inicio automático, pero debería sonar al hacer click."));
+            
+            btnNo.style.display = 'none';
+            document.getElementById('fase-pregunta').style.display = 'none';
+            const contenido = document.getElementById('contenido-real');
+            contenido.style.display = 'block';
+            setTimeout(() => contenido.style.opacity = '1', 50);
+
+            // Explosión de pétalos extra al decir que sí
+            for(let i=0; i<20; i++) {
+                setTimeout(createPetal, i * 100);
+            }
+        }
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            const size = Math.random() * 15 + 10 + 'px';
+            petal.style.width = size;
+            petal.style.height = size;
+            petal.style.left = Math.random() * 100 + 'vw';
+            const duration = Math.random() * 3 + 4;
+            petal.style.animationDuration = duration + 's';
+            petal.style.opacity = Math.random();
+            document.body.appendChild(petal);
+            setTimeout(() => { petal.remove(); }, duration * 1000);
+        }
+
+        setInterval(createPetal, 300);
+    </script>
+</body>
+</html>
